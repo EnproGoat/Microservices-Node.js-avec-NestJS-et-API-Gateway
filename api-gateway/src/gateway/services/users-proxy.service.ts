@@ -2,31 +2,33 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 
+// ce service fait les appels HTTP vers le users-service
 @Injectable()
 export class UsersProxyService {
-  private readonly baseUrl =
-    process.env.USERS_SERVICE_URL ?? 'http://localhost:3001';
 
-  constructor(private readonly http: HttpService) {}
+  // l'url du users-service, par defaut localhost:3001
+  private usersServiceUrl = process.env.USERS_SERVICE_URL || 'http://localhost:3001';
 
-  async findAll() {
-    const { data } = await firstValueFrom(
-      this.http.get(`${this.baseUrl}/users`),
+  constructor(private httpService: HttpService) {}
+
+  async getAllUsers() {
+    const reponse = await firstValueFrom(
+      this.httpService.get(this.usersServiceUrl + '/users')
     );
-    return data;
+    return reponse.data;
   }
 
-  async findOne(id: string) {
-    const { data } = await firstValueFrom(
-      this.http.get(`${this.baseUrl}/users/${id}`),
+  async getUserById(id: string) {
+    const reponse = await firstValueFrom(
+      this.httpService.get(this.usersServiceUrl + '/users/' + id)
     );
-    return data;
+    return reponse.data;
   }
 
-  async create(body: unknown) {
-    const { data } = await firstValueFrom(
-      this.http.post(`${this.baseUrl}/users`, body),
+  async createUser(body: any) {
+    const reponse = await firstValueFrom(
+      this.httpService.post(this.usersServiceUrl + '/users', body)
     );
-    return data;
+    return reponse.data;
   }
 }

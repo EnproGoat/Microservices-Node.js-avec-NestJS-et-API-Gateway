@@ -2,31 +2,33 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 
+// ce service fait les appels HTTP vers le orders-service
 @Injectable()
 export class OrdersProxyService {
-  private readonly baseUrl =
-    process.env.ORDERS_SERVICE_URL ?? 'http://localhost:3002';
 
-  constructor(private readonly http: HttpService) {}
+  // l'url du orders-service, par defaut localhost:3002
+  private ordersServiceUrl = process.env.ORDERS_SERVICE_URL || 'http://localhost:3002';
 
-  async findAll() {
-    const { data } = await firstValueFrom(
-      this.http.get(`${this.baseUrl}/orders`),
+  constructor(private httpService: HttpService) {}
+
+  async getAllOrders() {
+    const reponse = await firstValueFrom(
+      this.httpService.get(this.ordersServiceUrl + '/orders')
     );
-    return data;
+    return reponse.data;
   }
 
-  async findOne(id: string) {
-    const { data } = await firstValueFrom(
-      this.http.get(`${this.baseUrl}/orders/${id}`),
+  async getOrderById(id: string) {
+    const reponse = await firstValueFrom(
+      this.httpService.get(this.ordersServiceUrl + '/orders/' + id)
     );
-    return data;
+    return reponse.data;
   }
 
-  async create(body: unknown) {
-    const { data } = await firstValueFrom(
-      this.http.post(`${this.baseUrl}/orders`, body),
+  async createOrder(body: any) {
+    const reponse = await firstValueFrom(
+      this.httpService.post(this.ordersServiceUrl + '/orders', body)
     );
-    return data;
+    return reponse.data;
   }
 }
