@@ -3,6 +3,8 @@ import { USER_REPOSITORY } from './application/ports/user.repository.port';
 import { CreateUserUseCase } from './application/use-cases/create-user.use-case';
 import { GetUserUseCase } from './application/use-cases/get-user.use-case';
 import { ListUsersUseCase } from './application/use-cases/list-users.use-case';
+import { UpdateUserUseCase } from './application/use-cases/update-user.use-case';
+import { DeleteUserUseCase } from './application/use-cases/delete-user.use-case';
 import { InMemoryUserRepository } from './infrastructure/repositories/in-memory-user.repository';
 import { UsersController } from './adapter/in/http/users.controller';
 
@@ -13,6 +15,8 @@ import { UsersController } from './adapter/in/http/users.controller';
     CreateUserUseCase,
     GetUserUseCase,
     ListUsersUseCase,
+    UpdateUserUseCase,
+    DeleteUserUseCase,
   ],
 })
 export class UsersModule {}

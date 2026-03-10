@@ -1,4 +1,4 @@
-export type OrderStatus = 'PENDING' | 'CONFIRMED' | 'CANCELLED';
+export type OrderStatus = 'CREATED' | 'PAID' | 'SHIPPED';
 
 export interface OrderItem {
   productId: string;
@@ -11,7 +11,7 @@ export class Order {
     public readonly id: string,
     public readonly userId: string,
     public readonly items: OrderItem[],
-    public readonly status: OrderStatus = 'PENDING',
+    public readonly status: OrderStatus = 'CREATED',
     public readonly createdAt: Date = new Date(),
   ) {}
 }

@@ -25,4 +25,8 @@ export class InMemoryUserRepository implements UserRepositoryPort {
     this.store.set(user.id, user);
     return user;
   }
+
+  async delete(id: string): Promise<void> {
+    this.store.delete(id);
+  }
 }
