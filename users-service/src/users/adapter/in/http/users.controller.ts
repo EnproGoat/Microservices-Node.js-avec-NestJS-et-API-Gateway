@@ -3,6 +3,8 @@ import {
   ConflictException,
   Controller,
   Get,
+  HttpCode,
+  HttpStatus,
   NotFoundException,
   Param,
   Post,
@@ -13,6 +15,7 @@ import { CreateUserUseCase } from '../../../application/use-cases/create-user.us
 import { GetUserUseCase } from '../../../application/use-cases/get-user.use-case';
 import { ListUsersUseCase } from '../../../application/use-cases/list-users.use-case';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UserResponseDto } from './dto/user-response.dto';
 
 @Controller('users')
 export class UsersController {
@@ -23,9 +26,11 @@ export class UsersController {
   ) {}
 
   @Post()
-  async create(@Body() dto: CreateUserDto) {
+  @HttpCode(HttpStatus.CREATED)
+  async create(@Body() dto: CreateUserDto): Promise<UserResponseDto> {
     try {
-      return await this.createUser.execute(dto);
+      const user = await this.createUser.execute(dto);
+      return UserResponseDto.fromEntity(user);
     } catch (e) {
       if (e instanceof UserAlreadyExistsException) throw new ConflictException(e.message);
       throw e;
@@ -33,14 +38,16 @@ export class UsersController {
   }
 
   @Get()
-  async findAll() {
-    return this.listUsers.execute();
+  async findAll(): Promise<UserResponseDto[]> {
+    const users = await this.listUsers.execute();
+    return users.map(UserResponseDto.fromEntity);
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string): Promise<UserResponseDto> {
     try {
-      return await this.getUser.execute(id);
+      const user = await this.getUser.execute(id);
+      return UserResponseDto.fromEntity(user);
     } catch (e) {
       if (e instanceof UserNotFoundException) throw new NotFoundException(e.message);
       throw e;

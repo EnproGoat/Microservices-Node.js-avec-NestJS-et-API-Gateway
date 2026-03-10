@@ -2,6 +2,8 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
+  HttpStatus,
   NotFoundException,
   Param,
   Post,
@@ -11,6 +13,7 @@ import { CreateOrderUseCase } from '../../../application/use-cases/create-order.
 import { GetOrderUseCase } from '../../../application/use-cases/get-order.use-case';
 import { ListOrdersUseCase } from '../../../application/use-cases/list-orders.use-case';
 import { CreateOrderDto } from './dto/create-order.dto';
+import { OrderResponseDto } from './dto/order-response.dto';
 
 @Controller('orders')
 export class OrdersController {
@@ -21,19 +24,23 @@ export class OrdersController {
   ) {}
 
   @Post()
-  async create(@Body() dto: CreateOrderDto) {
-    return this.createOrder.execute(dto);
+  @HttpCode(HttpStatus.CREATED)
+  async create(@Body() dto: CreateOrderDto): Promise<OrderResponseDto> {
+    const order = await this.createOrder.execute(dto);
+    return OrderResponseDto.fromEntity(order);
   }
 
   @Get()
-  async findAll() {
-    return this.listOrders.execute();
+  async findAll(): Promise<OrderResponseDto[]> {
+    const orders = await this.listOrders.execute();
+    return orders.map(OrderResponseDto.fromEntity);
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string): Promise<OrderResponseDto> {
     try {
-      return await this.getOrder.execute(id);
+      const order = await this.getOrder.execute(id);
+      return OrderResponseDto.fromEntity(order);
     } catch (e) {
       if (e instanceof OrderNotFoundException) throw new NotFoundException(e.message);
       throw e;
