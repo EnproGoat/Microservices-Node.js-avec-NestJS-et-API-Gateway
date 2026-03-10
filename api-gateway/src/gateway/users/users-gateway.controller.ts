@@ -1,13 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  HttpException,
-  HttpStatus,
-  Param,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, Get, HttpException, HttpStatus, Param, Post } from '@nestjs/common';
 import { AxiosError } from 'axios';
 import { UsersProxyService } from '../services/users-proxy.service';
 
@@ -16,7 +7,7 @@ export class UsersGatewayController {
   constructor(private readonly usersProxy: UsersProxyService) {}
 
   @Get()
-  async findAll() {
+  findAll() {
     return this.usersProxy.findAll();
   }
 
@@ -25,24 +16,20 @@ export class UsersGatewayController {
     try {
       return await this.usersProxy.findOne(id);
     } catch (e) {
-      this.rethrow(e);
+      const err = e as AxiosError;
+      const status = err.response?.status ?? HttpStatus.INTERNAL_SERVER_ERROR;
+      throw new HttpException(err.response?.data ?? err.message, status);
     }
   }
 
   @Post()
-  @HttpCode(HttpStatus.CREATED)
   async create(@Body() body: unknown) {
     try {
       return await this.usersProxy.create(body);
     } catch (e) {
-      this.rethrow(e);
+      const err = e as AxiosError;
+      const status = err.response?.status ?? HttpStatus.INTERNAL_SERVER_ERROR;
+      throw new HttpException(err.response?.data ?? err.message, status);
     }
-  }
-
-  private rethrow(e: unknown): never {
-    const err = e as AxiosError;
-    const status = err.response?.status ?? HttpStatus.INTERNAL_SERVER_ERROR;
-    const message = (err.response?.data as { message?: string })?.message ?? err.message;
-    throw new HttpException(message, status);
   }
 }

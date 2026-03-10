@@ -1,21 +1,12 @@
 import { Type } from 'class-transformer';
-import {
-  ArrayMinSize,
-  IsArray,
-  IsNotEmpty,
-  IsNumber,
-  IsPositive,
-  IsUUID,
-  Min,
-  ValidateNested,
-} from 'class-validator';
+import { ArrayMinSize, IsNotEmpty, IsNumber, IsPositive, IsUUID, ValidateNested } from 'class-validator';
 
 export class OrderItemDto {
-  @IsUUID()
+  @IsNotEmpty()
   productId: string;
 
   @IsNumber()
-  @Min(1)
+  @IsPositive()
   quantity: number;
 
   @IsNumber()
@@ -25,10 +16,8 @@ export class OrderItemDto {
 
 export class CreateOrderDto {
   @IsUUID()
-  @IsNotEmpty()
   userId: string;
 
-  @IsArray()
   @ArrayMinSize(1)
   @ValidateNested({ each: true })
   @Type(() => OrderItemDto)

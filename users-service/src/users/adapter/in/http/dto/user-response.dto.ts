@@ -7,11 +7,6 @@ export class UserResponseDto {
   createdAt: Date;
 
   static fromEntity(user: User): UserResponseDto {
-    const dto = new UserResponseDto();
-    dto.id = user.id;
-    dto.email = user.email;
-    dto.name = user.name;
-    dto.createdAt = user.createdAt;
-    return dto;
+    return { id: user.id, email: user.email, name: user.name, createdAt: user.createdAt };
   }
 }
