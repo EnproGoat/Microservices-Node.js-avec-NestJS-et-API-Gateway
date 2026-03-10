@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { USER_REPOSITORY } from './application/ports/user.repository.port';
+import * as userRepositoryPort from './application/ports/user.repository.port';
 import { CreateUserUseCase } from './application/use-cases/create-user.use-case';
 import { GetUserUseCase } from './application/use-cases/get-user.use-case';
 import { ListUsersUseCase } from './application/use-cases/list-users.use-case';
@@ -11,7 +11,7 @@ import { UsersController } from './adapter/in/http/users.controller';
 @Module({
   controllers: [UsersController],
   providers: [
-    { provide: USER_REPOSITORY, useClass: InMemoryUserRepository },
+    { provide: userRepositoryPort.USER_REPOSITORY, useClass: InMemoryUserRepository },
     CreateUserUseCase,
     GetUserUseCase,
     ListUsersUseCase,

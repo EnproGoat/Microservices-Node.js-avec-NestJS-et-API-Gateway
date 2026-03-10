@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { User } from '../../domain/entities/user.entity';
 import { UserAlreadyExistsException } from '../../domain/exceptions/user-already-exists.exception';
-import { USER_REPOSITORY, UserRepositoryPort } from '../ports/user.repository.port';
+import * as userRepositoryPort from '../ports/user.repository.port';
 
 export interface CreateUserCommand {
   email: string;
@@ -12,8 +12,8 @@ export interface CreateUserCommand {
 @Injectable()
 export class CreateUserUseCase {
   constructor(
-    @Inject(USER_REPOSITORY)
-    private readonly userRepository: UserRepositoryPort,
+    @Inject(userRepositoryPort.USER_REPOSITORY)
+    private readonly userRepository: userRepositoryPort.UserRepositoryPort,
   ) {}
 
   async execute(command: CreateUserCommand): Promise<User> {

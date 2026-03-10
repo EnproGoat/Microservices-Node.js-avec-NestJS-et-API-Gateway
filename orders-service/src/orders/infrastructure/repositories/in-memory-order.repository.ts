@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { Order } from '../../domain/entities/order.entity';
-import { OrderRepositoryPort } from '../../application/ports/order.repository.port';
+import * as orderRepositoryPort from '../../application/ports/order.repository.port';
 
 @Injectable()
-export class InMemoryOrderRepository implements OrderRepositoryPort {
+export class InMemoryOrderRepository implements orderRepositoryPort.OrderRepositoryPort {
   private readonly store: Map<string, Order> = new Map();
 
   async findById(id: string): Promise<Order | null> {

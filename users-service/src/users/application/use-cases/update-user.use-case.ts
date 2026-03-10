@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { User, UserRole } from '../../domain/entities/user.entity';
 import { UserNotFoundException } from '../../domain/exceptions/user-not-found.exception';
-import { USER_REPOSITORY, UserRepositoryPort } from '../ports/user.repository.port';
+import * as userRepositoryPort from '../ports/user.repository.port';
 
 export interface UpdateUserCommand {
   id: string;
@@ -12,8 +12,8 @@ export interface UpdateUserCommand {
 @Injectable()
 export class UpdateUserUseCase {
   constructor(
-    @Inject(USER_REPOSITORY)
-    private readonly userRepository: UserRepositoryPort,
+    @Inject(userRepositoryPort.USER_REPOSITORY)
+    private readonly userRepository: userRepositoryPort.UserRepositoryPort,
   ) {}
 
   async execute(command: UpdateUserCommand): Promise<User> {

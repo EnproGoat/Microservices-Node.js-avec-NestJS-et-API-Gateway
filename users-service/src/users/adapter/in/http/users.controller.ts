@@ -49,7 +49,7 @@ export class UsersController {
     const users = await this.listUsers.execute();
     return users.map(UserResponseDto.fromEntity);
   }
-
+ 
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<UserResponseDto> {
     try {
