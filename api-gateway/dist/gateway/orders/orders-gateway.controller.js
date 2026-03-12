@@ -13,6 +13,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OrdersGatewayController = void 0;
+const openapi = require("@nestjs/swagger");
 const common_1 = require("@nestjs/common");
 const orders_proxy_service_1 = require("../services/orders-proxy.service");
 let OrdersGatewayController = class OrdersGatewayController {
@@ -56,12 +57,14 @@ let OrdersGatewayController = class OrdersGatewayController {
 exports.OrdersGatewayController = OrdersGatewayController;
 __decorate([
     (0, common_1.Get)(),
+    openapi.ApiResponse({ status: 200, type: Object }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], OrdersGatewayController.prototype, "getAll", null);
 __decorate([
     (0, common_1.Get)(':id'),
+    openapi.ApiResponse({ status: 200, type: Object }),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
@@ -69,6 +72,7 @@ __decorate([
 ], OrdersGatewayController.prototype, "getOne", null);
 __decorate([
     (0, common_1.Post)(),
+    openapi.ApiResponse({ status: 201, type: Object }),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),

@@ -1,0 +1,42 @@
+services:
+  mongo:
+    image: mongo:7
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  users-service:
+    build: ./users-service
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+      - MONGO_URI=mongodb://mongo:27017/users-service
+    depends_on:
+      - mongo
+
+  orders-service:
+    build: ./orders-service
+    ports:
+      - "3002:3002"
+    environment:
+      - PORT=3002
+      - MONGO_URI=mongodb://mongo:27017/orders-service
+    depends_on:
+      - mongo
+
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - USERS_SERVICE_URL=http://users-service:3001
+      - ORDERS_SERVICE_URL=http://orders-service:3002
+    depends_on:
+      - users-service
+      - orders-service
+
+volumes:
+  mongo-data:

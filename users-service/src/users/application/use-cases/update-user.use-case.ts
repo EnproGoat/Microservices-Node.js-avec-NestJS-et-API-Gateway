@@ -24,6 +24,7 @@ export class UpdateUserUseCase {
       existing.id,
       existing.email,
       command.name ?? existing.name,
+      existing.password,
       command.role ?? existing.role,
       existing.createdAt,
     );
