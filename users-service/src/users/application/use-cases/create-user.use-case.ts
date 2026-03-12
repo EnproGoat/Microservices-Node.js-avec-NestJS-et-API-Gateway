@@ -7,6 +7,8 @@ import * as userRepositoryPort from '../ports/user.repository.port';
 export interface CreateUserCommand {
   email: string;
   name: string;
+  password: string;
+  role?: 'ADMIN' | 'USER';
 }
 
 @Injectable()
@@ -21,7 +23,7 @@ export class CreateUserUseCase {
     if (existing) {
       throw new UserAlreadyExistsException(command.email);
     }
-    const user = new User(randomUUID(), command.email, command.name);
+    const user = new User(randomUUID(), command.email, command.name, command.password, command.role);
     return this.userRepository.save(user);
   }
 }

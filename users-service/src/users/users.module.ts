@@ -18,5 +18,6 @@ import { UsersController } from './adapter/in/http/users.controller';
     UpdateUserUseCase,
     DeleteUserUseCase,
   ],
+  exports: [userRepositoryPort.USER_REPOSITORY],
 })
 export class UsersModule {}
