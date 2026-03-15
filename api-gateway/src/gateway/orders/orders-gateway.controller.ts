@@ -1,7 +1,10 @@
 import { Body, Controller, Get, Param, Post, HttpException, HttpStatus } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiParam, ApiBody, ApiResponse } from '@nestjs/swagger';
 import { OrdersProxyService } from '../services/orders-proxy.service';
+import { CreateOrderDto } from '../dto/create-order.dto';
 
 // ce controller redirige les requetes /orders vers le orders-service
+@ApiTags('Orders')
 @Controller('orders')
 export class OrdersGatewayController {
 
@@ -9,6 +12,9 @@ export class OrdersGatewayController {
 
   // GET /orders -> recupere toutes les commandes
   @Get()
+  @ApiOperation({ summary: 'Recuperer toutes les commandes' })
+  @ApiResponse({ status: 200, description: 'Liste des commandes' })
+  @ApiResponse({ status: 502, description: 'orders-service indisponible' })
   async getAll() {
     try {
       const orders = await this.ordersProxy.getAllOrders();
@@ -21,6 +27,10 @@ export class OrdersGatewayController {
 
   // GET /orders/:id -> recupere une commande par id
   @Get(':id')
+  @ApiOperation({ summary: 'Recuperer une commande par son ID' })
+  @ApiParam({ name: 'id', description: 'ID de la commande', example: '507f1f77bcf86cd799439011' })
+  @ApiResponse({ status: 200, description: 'Commande trouvee' })
+  @ApiResponse({ status: 404, description: 'Commande non trouvee' })
   async getOne(@Param('id') id: string) {
     try {
       const order = await this.ordersProxy.getOrderById(id);
@@ -34,7 +44,10 @@ export class OrdersGatewayController {
 
   // POST /orders -> cree une commande
   @Post()
-  async create(@Body() body: any) {
+  @ApiOperation({ summary: 'Creer une nouvelle commande' })
+  @ApiBody({ type: CreateOrderDto })
+  @ApiResponse({ status: 201, description: 'Commande creee avec succes' })
+  async create(@Body() body: CreateOrderDto) {
     try {
       const nouvelleOrder = await this.ordersProxy.createOrder(body);
       return nouvelleOrder;

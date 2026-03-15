@@ -1,7 +1,10 @@
 import { Body, Controller, Get, Param, Post, HttpException, HttpStatus } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiParam, ApiBody, ApiResponse } from '@nestjs/swagger';
 import { UsersProxyService } from '../services/users-proxy.service';
+import { CreateUserDto } from '../dto/create-user.dto';
 
 // ce controller redirige les requetes /users vers le users-service
+@ApiTags('Users')
 @Controller('users')
 export class UsersGatewayController {
 
@@ -9,6 +12,9 @@ export class UsersGatewayController {
 
   // GET /users -> recupere tous les users
   @Get()
+  @ApiOperation({ summary: 'Recuperer tous les utilisateurs' })
+  @ApiResponse({ status: 200, description: 'Liste des utilisateurs' })
+  @ApiResponse({ status: 502, description: 'users-service indisponible' })
   async getAll() {
     try {
       const users = await this.usersProxy.getAllUsers();
@@ -21,6 +27,10 @@ export class UsersGatewayController {
 
   // GET /users/:id -> recupere un user par son id
   @Get(':id')
+  @ApiOperation({ summary: 'Recuperer un utilisateur par son ID' })
+  @ApiParam({ name: 'id', description: 'ID du user', example: '507f1f77bcf86cd799439011' })
+  @ApiResponse({ status: 200, description: 'Utilisateur trouve' })
+  @ApiResponse({ status: 404, description: 'Utilisateur non trouve' })
   async getOne(@Param('id') id: string) {
     try {
       const user = await this.usersProxy.getUserById(id);
@@ -35,7 +45,10 @@ export class UsersGatewayController {
 
   // POST /users -> cree un user
   @Post()
-  async create(@Body() body: any) {
+  @ApiOperation({ summary: 'Creer un nouvel utilisateur' })
+  @ApiBody({ type: CreateUserDto })
+  @ApiResponse({ status: 201, description: 'Utilisateur cree avec succes' })
+  async create(@Body() body: CreateUserDto) {
     try {
       const nouveauUser = await this.usersProxy.createUser(body);
       return nouveauUser;
