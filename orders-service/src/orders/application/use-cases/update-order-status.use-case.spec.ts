@@ -51,7 +51,7 @@ describe('UpdateOrderStatusUseCase', () => {
     expect(repo.save).not.toHaveBeenCalled();
   });
 
-  it('lève OrderNotFoundException si la commande n'existe pas', async () => {
+  it("lève OrderNotFoundException si la commande n'existe pas", async () => {
     repo.findById.mockResolvedValue(null);
 
     await expect(useCase.execute('unknown-id', 'PAID')).rejects.toThrow(OrderNotFoundException);

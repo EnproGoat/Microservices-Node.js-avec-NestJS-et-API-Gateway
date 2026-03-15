@@ -1,9 +1,9 @@
 import { DeleteUserUseCase } from './delete-user.use-case';
-import { UserNotFoundException } from '../../domain/exceptions/user-not-found.exception';
 import { User } from '../../domain/entities/user.entity';
+import { UserNotFoundException } from '../../domain/exceptions/user-not-found.exception';
 import { UserRepositoryPort } from '../ports/user.repository.port';
 
-const mockRepo = (): jest.Mocked<UserRepositoryPort> => ({
+const makeRepo = (): jest.Mocked<UserRepositoryPort> => ({
   findById: jest.fn(),
   findByEmail: jest.fn(),
   findAll: jest.fn(),
@@ -12,29 +12,28 @@ const mockRepo = (): jest.Mocked<UserRepositoryPort> => ({
 });
 
 describe('DeleteUserUseCase', () => {
-  let useCase: DeleteUserUseCase;
   let repo: jest.Mocked<UserRepositoryPort>;
+  let useCase: DeleteUserUseCase;
 
   beforeEach(() => {
-    repo = mockRepo();
+    repo = makeRepo();
     useCase = new DeleteUserUseCase(repo as any);
     (useCase as any).userRepository = repo;
   });
 
-  it('supprime l'utilisateur s'il existe', async () => {
-    const user = new User('uuid-1', 'alice@test.com', 'Alice', 'pass');
-    repo.findById.mockResolvedValue(user);
+  it("supprime l'utilisateur s'il existe", async () => {
+    repo.findById.mockResolvedValue(new User('id-1', 'alice@test.com', 'Alice', 'pass'));
     repo.delete.mockResolvedValue(undefined);
 
-    await useCase.execute('uuid-1');
+    await useCase.execute('id-1');
 
-    expect(repo.delete).toHaveBeenCalledWith('uuid-1');
+    expect(repo.delete).toHaveBeenCalledWith('id-1');
   });
 
-  it('lève UserNotFoundException si l'utilisateur n'existe pas', async () => {
+  it('lève UserNotFoundException si introuvable', async () => {
     repo.findById.mockResolvedValue(null);
 
-    await expect(useCase.execute('unknown-id')).rejects.toThrow(UserNotFoundException);
+    await expect(useCase.execute('inconnu')).rejects.toThrow(UserNotFoundException);
     expect(repo.delete).not.toHaveBeenCalled();
   });
 });

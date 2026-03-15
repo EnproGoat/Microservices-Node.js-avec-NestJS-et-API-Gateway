@@ -30,7 +30,7 @@ describe('GetOrderUseCase', () => {
     expect(result).toBe(order);
   });
 
-  it('lève OrderNotFoundException si la commande n'existe pas', async () => {
+  it("lève OrderNotFoundException si la commande n'existe pas", async () => {
     repo.findById.mockResolvedValue(null);
 
     await expect(useCase.execute('unknown-id')).rejects.toThrow(OrderNotFoundException);
