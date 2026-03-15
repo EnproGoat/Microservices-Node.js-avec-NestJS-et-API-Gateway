@@ -10,7 +10,9 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
+import { JwtAuthGuard } from '../../../../auth/jwt-auth.guard';
 import { UserAlreadyExistsException } from '../../../domain/exceptions/user-already-exists.exception';
 import { UserNotFoundException } from '../../../domain/exceptions/user-not-found.exception';
 import { CreateUserUseCase } from '../../../application/use-cases/create-user.use-case';
@@ -22,6 +24,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserResponseDto } from './dto/user-response.dto';
 
+@UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UsersController {
   constructor(

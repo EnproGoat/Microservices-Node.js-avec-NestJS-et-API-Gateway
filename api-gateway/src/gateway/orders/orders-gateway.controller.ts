@@ -1,7 +1,9 @@
-import { Body, Controller, Get, Param, Post, HttpException, HttpStatus } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, HttpException, HttpStatus, UseGuards } from '@nestjs/common';
 import { OrdersProxyService } from '../services/orders-proxy.service';
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 
 // ce controller redirige les requetes /orders vers le orders-service
+@UseGuards(JwtAuthGuard)
 @Controller('orders')
 export class OrdersGatewayController {
 

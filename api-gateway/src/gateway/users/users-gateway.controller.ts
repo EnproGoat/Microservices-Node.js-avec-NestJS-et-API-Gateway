@@ -1,7 +1,9 @@
-import { Body, Controller, Get, Param, Post, HttpException, HttpStatus } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, HttpException, HttpStatus, UseGuards } from '@nestjs/common';
 import { UsersProxyService } from '../services/users-proxy.service';
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 
 // ce controller redirige les requetes /users vers le users-service
+@UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UsersGatewayController {
 
