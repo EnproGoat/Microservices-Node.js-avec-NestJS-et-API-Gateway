@@ -1,10 +1,12 @@
-import { Body, Controller, Get, Param, Post, HttpException, HttpStatus } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, HttpException, HttpStatus, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiParam, ApiBody, ApiResponse } from '@nestjs/swagger';
 import { OrdersProxyService } from '../services/orders-proxy.service';
 import { CreateOrderDto } from '../dto/create-order.dto';
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 
 // ce controller redirige les requetes /orders vers le orders-service
 @ApiTags('Orders')
+@UseGuards(JwtAuthGuard)
 @Controller('orders')
 export class OrdersGatewayController {
 

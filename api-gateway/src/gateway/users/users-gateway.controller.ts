@@ -1,10 +1,12 @@
-import { Body, Controller, Get, Param, Post, HttpException, HttpStatus } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, HttpException, HttpStatus, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiParam, ApiBody, ApiResponse } from '@nestjs/swagger';
 import { UsersProxyService } from '../services/users-proxy.service';
 import { CreateUserDto } from '../dto/create-user.dto';
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 
 // ce controller redirige les requetes /users vers le users-service
 @ApiTags('Users')
+@UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UsersGatewayController {
 

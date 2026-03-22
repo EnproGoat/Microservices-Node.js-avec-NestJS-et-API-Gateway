@@ -9,7 +9,9 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
+import { JwtAuthGuard } from '../../../../auth/jwt-auth.guard';
 import { OrderNotFoundException } from '../../../domain/exceptions/order-not-found.exception';
 import { InvalidStatusTransitionException } from '../../../domain/exceptions/invalid-status-transition.exception';
 import { CreateOrderUseCase } from '../../../application/use-cases/create-order.use-case';
@@ -20,6 +22,7 @@ import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
 import { OrderResponseDto } from './dto/order-response.dto';
 
+@UseGuards(JwtAuthGuard)
 @Controller('orders')
 export class OrdersController {
   constructor(
