@@ -8,6 +8,6 @@ export class UserResponseDto {
   createdAt: Date;
 
   static fromEntity(user: User): UserResponseDto {
-    return { id: user.id, email: user.email, name: user.name, role: user.role, createdAt: user.createdAt };
+    return { id: user.id!, email: user.email, name: user.name, role: user.role, createdAt: user.createdAt };
   }
 }

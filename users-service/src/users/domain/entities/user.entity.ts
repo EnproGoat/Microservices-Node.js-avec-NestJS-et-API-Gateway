@@ -2,7 +2,7 @@ export type UserRole = 'ADMIN' | 'USER';
 
 export class User {
   constructor(
-    public readonly id: string,
+    public readonly id: string | undefined,
     public readonly email: string,
     public readonly name: string,
     public readonly password: string,

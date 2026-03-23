@@ -5,9 +5,6 @@ import { UserRole } from '../../domain/entities/user.entity';
 @Schema({ collection: 'users' })
 export class UserDocument {
   @Prop({ required: true, unique: true })
-  userId: string;
-
-  @Prop({ required: true, unique: true })
   email: string;
 
   @Prop({ required: true })

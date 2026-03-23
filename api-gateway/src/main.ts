@@ -8,6 +8,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('API Gateway')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
   SwaggerModule.setup('api-docs', app, () => SwaggerModule.createDocument(app, config));
 

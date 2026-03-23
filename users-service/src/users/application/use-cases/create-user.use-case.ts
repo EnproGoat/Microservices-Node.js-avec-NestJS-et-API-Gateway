@@ -1,5 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { randomUUID } from 'crypto';
 import { User } from '../../domain/entities/user.entity';
 import { UserAlreadyExistsException } from '../../domain/exceptions/user-already-exists.exception';
 import * as userRepositoryPort from '../ports/user.repository.port';
@@ -23,7 +22,7 @@ export class CreateUserUseCase {
     if (existing) {
       throw new UserAlreadyExistsException(command.email);
     }
-    const user = new User(randomUUID(), command.email, command.name, command.password, command.role);
+    const user = new User(undefined, command.email, command.name, command.password, command.role);
     return this.userRepository.save(user);
   }
 }

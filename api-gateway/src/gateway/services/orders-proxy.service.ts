@@ -11,23 +11,27 @@ export class OrdersProxyService {
 
   constructor(private httpService: HttpService) {}
 
-  async getAllOrders() {
+  private authHeaders(token: string) {
+    return { headers: { Authorization: token } };
+  }
+
+  async getAllOrders(token: string) {
     const reponse = await firstValueFrom(
-      this.httpService.get(this.ordersServiceUrl + '/orders')
+      this.httpService.get(this.ordersServiceUrl + '/orders', this.authHeaders(token))
     );
     return reponse.data;
   }
 
-  async getOrderById(id: string) {
+  async getOrderById(id: string, token: string) {
     const reponse = await firstValueFrom(
-      this.httpService.get(this.ordersServiceUrl + '/orders/' + id)
+      this.httpService.get(this.ordersServiceUrl + '/orders/' + id, this.authHeaders(token))
     );
     return reponse.data;
   }
 
-  async createOrder(body: any) {
+  async createOrder(body: any, token: string) {
     const reponse = await firstValueFrom(
-      this.httpService.post(this.ordersServiceUrl + '/orders', body)
+      this.httpService.post(this.ordersServiceUrl + '/orders', body, this.authHeaders(token))
     );
     return reponse.data;
   }

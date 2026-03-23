@@ -1,11 +1,12 @@
-import { Body, Controller, Get, Param, Post, HttpException, HttpStatus, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiParam, ApiBody, ApiResponse } from '@nestjs/swagger';
+import { Body, Controller, Get, Param, Post, Req, HttpException, HttpStatus, UseGuards } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiParam, ApiBody, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { OrdersProxyService } from '../services/orders-proxy.service';
 import { CreateOrderDto } from '../dto/create-order.dto';
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 
 // ce controller redirige les requetes /orders vers le orders-service
 @ApiTags('Orders')
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller('orders')
 export class OrdersGatewayController {
@@ -17,9 +18,9 @@ export class OrdersGatewayController {
   @ApiOperation({ summary: 'Recuperer toutes les commandes' })
   @ApiResponse({ status: 200, description: 'Liste des commandes' })
   @ApiResponse({ status: 502, description: 'orders-service indisponible' })
-  async getAll() {
+  async getAll(@Req() req) {
     try {
-      const orders = await this.ordersProxy.getAllOrders();
+      const orders = await this.ordersProxy.getAllOrders(req.headers.authorization);
       return orders;
     } catch (err) {
       console.log('erreur dans getAll orders:', err.message);
@@ -33,9 +34,9 @@ export class OrdersGatewayController {
   @ApiParam({ name: 'id', description: 'ID de la commande', example: '507f1f77bcf86cd799439011' })
   @ApiResponse({ status: 200, description: 'Commande trouvee' })
   @ApiResponse({ status: 404, description: 'Commande non trouvee' })
-  async getOne(@Param('id') id: string) {
+  async getOne(@Param('id') id: string, @Req() req) {
     try {
-      const order = await this.ordersProxy.getOrderById(id);
+      const order = await this.ordersProxy.getOrderById(id, req.headers.authorization);
       return order;
     } catch (err) {
       const statusCode = err.response?.status ?? HttpStatus.INTERNAL_SERVER_ERROR;
@@ -49,9 +50,9 @@ export class OrdersGatewayController {
   @ApiOperation({ summary: 'Creer une nouvelle commande' })
   @ApiBody({ type: CreateOrderDto })
   @ApiResponse({ status: 201, description: 'Commande creee avec succes' })
-  async create(@Body() body: CreateOrderDto) {
+  async create(@Body() body: CreateOrderDto, @Req() req) {
     try {
-      const nouvelleOrder = await this.ordersProxy.createOrder(body);
+      const nouvelleOrder = await this.ordersProxy.createOrder(body, req.headers.authorization);
       return nouvelleOrder;
     } catch (err) {
       const statusCode = err.response?.status ?? HttpStatus.INTERNAL_SERVER_ERROR;

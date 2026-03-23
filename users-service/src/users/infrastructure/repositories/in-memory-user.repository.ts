@@ -22,8 +22,10 @@ export class InMemoryUserRepository implements userRepositoryPort.UserRepository
   }
 
   async save(user: User): Promise<User> {
-    this.store.set(user.id, user);
-    return user;
+    const id = user.id ?? Math.random().toString(36).slice(2);
+    const saved = new User(id, user.email, user.name, user.password, user.role, user.createdAt);
+    this.store.set(id, saved);
+    return saved;
   }
 
   async delete(id: string): Promise<void> {
